@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { db, auth, googleProvider } from "@/lib/firebase";
 import { signInWithPopup } from "firebase/auth";
@@ -17,7 +17,7 @@ const courses = [
     { id: "pharma", name: "Basics of Pharma", emoji: "💊" },
 ];
 
-export default function Home() {
+function HomeContent() {
     const searchParams = useSearchParams();
     const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
     const [formData, setFormData] = useState({ name: "", phone: "" });
@@ -269,5 +269,13 @@ export default function Home() {
                 </footer>
             </div>
         </main>
+    );
+}
+
+export default function Home() {
+    return (
+        <Suspense fallback={<div className="loading-screen">Loading...</div>}>
+            <HomeContent />
+        </Suspense>
     );
 }
